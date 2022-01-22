@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1> Hello World</h1>
+
+<p>This is my first webpage Flask!!</p>
+
+<p>Your name is {{first_name}}</p>
+
+<p>{{ stuff|safe }}</p>
+
+<h3>Favorite Pizza:</h3>
+
+{% for topping in favorite_pizza %}
+   <li>{{topping}}</li>
+   {% endfor %}
+
+   <br/><br/>
+   {{favorite_pizza.0}}
+
+
+{% endblock %}

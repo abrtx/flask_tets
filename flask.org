@@ -1,0 +1,171 @@
+#+TITLE: FLASK
+#+AUTHOR: Franco Gaudino
+#+DATE: 1/18/2022 16:29
+
+* Install Flask
+   pip instrall flask
+
+* Create a Flask instance
+   app = Flask(__name__)
+
+* Create a route decorator for functions in URL's
+   @app.route('/')
+   def index():
+
+* Export for Autommatic refresh code
+  c:/work/flasker:master*? λ export FLASK_ENV=development
+  c:/work/flasker:master*? λ export FLASK_APP=hello.py
+
+* Start Flask Server
+  flask run
+
+
+* Templates directory
+  Create a Template named "templates" folder inside workspace
+
+* Jinja Templates
+** Safe For Apply html tags inside python scripts
+    <p>{{ stuff|safe }}</p>
+** Striptags For eliminate tags inside html files
+    <p>{{ stuff|striptags }}</p>
+
+* loops inside html
+  {% for var in var_from_python %}
+  {% endfor %}  
+
+* Base block content
+**  Create a base.html in templates
+     #+begin_export html
+
+  ABOVE<br/><br/>
+
+  {% block content %}
+
+  {% endblock %}
+
+  <br/><br/>
+  BELOW
+#+end_export
+
+**  And add block to all html
+  #+begin_export html
+
+  {% extends 'base.html' %}
+  {% block content %}
+
+  {% endblock %}
+
+  #+end_export
+
+* Add bootstrap
+** goto webpage
+   https://getbootstrap.com/docs/5.1/getting-started/introduction/
+** copy one and paste in base
+Starter Template for example
+** put block content below body tag
+  #+begin_export html
+
+  <body>
+  {% block content %}
+
+  {% endblock %}
+ </body>
+  #+end_export
+
+* Navbar
+** goto webpage
+   https://getbootstrap.com/docs/5.1/components/navbar/
+** copy one and paste in base
+Navbar for example
+** Create a new html file navbar.html
+  #+begin_export html
+  <body>
+  {% block content %}
+
+  {% endblock %}
+ </body>
+
+  #+end_expor
+** Add Include to base
+   below <body>
+      {% include 'navbar.html' %}
+
+* Form flask-wtf
+pip install flask-wtf
+** Imports
+from flask_wtf import FlaskForm
+from wtform import StringField, SubmitField
+from wtform.validators import DataRequired
+
+** Secret key
+app.config['SECRET_KEY'] = "Flo"
+
+# Create a Form Class
+class NamerForm(FlaskForm):
+    name =
+    submit = 
+
+* Messages
+from Flask import flash
+** Add flash in Form
+        flash("Form Submitted Successfully")
+
+* Static files
+** In html
+<p id="demo"> This is stuff.. </p>
+
+<script src="{{ url_for('static', filename='js/myfile.js')}}"></script>
+
+
+
+** Called by js
+document.getElementById('demo').innerHTML = "This was created with JavaScript";
+** CSS Style
+#demo{
+    font-size: 42px;
+    color: darkblue;    
+}
+
+* Flask-sqlalchemy (Models file)
+pip install flask-sqlalchemy
+** Import
+from flask_sqlalchemy import SQLAlchemy
+
+** Add Database
+# Add Database 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+
+** Initilize the Database
+# Initialize The Database
+db = SQLAlchemy(app)
+
+** Create Model
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(200), nullable = False)
+    email = db.Column(db.String(120), nullable = False, unique = True) 
+    date_added = db.Column(db.DateTime, default = datetime.utcnow)
+
+    # Create A String
+    def __repr__(self):
+        return '<Name %r' % self.name
+
+** Create db with Model
+>>> from hello import db
+>>> db.create_all()
+* Flask-Migrate
+ pip install Flask-Migrate
+** Add flask_migrate view file
+from flask_migrate import Migrate
+
+** Add Decoration view file
+migrate = Migrate(app, db) 
+
+** Flask db init
+shell: flask db init 
+
+** Flask db migrate
+shell: flask db migrate -m 'Initial Migration'
+
+** Flask db upgrade
+shell: flask db upgrade
