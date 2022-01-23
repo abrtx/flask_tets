@@ -61,13 +61,39 @@ def update(id):
     else:
         return render_template("update.html",
                                form = form,
-                               name_to_update = name_to_update)
+                               name_to_update = name_to_update,
+                               id = id)
 
 # Create a Form Class
 class NamerForm(FlaskForm):
     name = StringField("What's Your name", validators = [DataRequired()])
     submit = SubmitField("Submit")
 
+
+@app.route('/user/delete/<int:id>')
+def del_user(id):
+    user_to_delete = Users.query.get_or_404(id)
+    name = None
+    form = UserForm()
+    
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()        
+        flash("Deleted Successfully!")
+        our_users = Users.query.order_by(Users.date_added)
+        return render_template("add_user.html",
+                               form = form,
+                               name = name,
+                               our_users = our_users)
+        
+    except:
+        flash("Whoops! There was a proble deleting user. Try again...")
+        return render_template("add_user.html",
+                               form = form,
+                               name = name,
+                               our_users = our_users)
+
+    
 
 @app.route('/user/add', methods=['GET', 'POST'])
 def add_user():
@@ -84,7 +110,7 @@ def add_user():
         form.email.data = ''
         form.sport.data = ''
         
-        flash("User Added Successfully!")
+        flash("Added Successfully!")
     our_users = Users.query.order_by(Users.date_added)
     return render_template("add_user.html",
                            form=form,
